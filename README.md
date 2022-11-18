@@ -28,7 +28,7 @@ After you cloned the repository do not start the application. To run the applica
 - Create a .env file in the server folder and type the following
 
 ```
-    HOST=127.0.0.1
+  HOST=127.0.0.1
   PORT=8000
   NODE_ENV=development
 
