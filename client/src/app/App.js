@@ -1,5 +1,6 @@
 /** @format */
 
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 
@@ -25,10 +26,49 @@ import SearchProvider from '../Context/SearchProvider';
 import Login from '../components/Authentication/Login/Login';
 import Register from '../components/Authentication/Register/Register';
 
+import { isLoggedIn, isAdmin } from '../utils/auth';
+
 // import DrawerNav from '../components/Nav/DrawerNav/DrawerNav';
 // import Checkout from '../components/Checkout/Checkout';
 
 function App() {
+  const [login, setLogin] = useState(false);
+  const [admin, setAdmnin] = useState(false);
+
+  async function checkLogin() {
+    const bool = await isLoggedIn();
+
+    if (!bool) {
+      setLogin(false);
+      return;
+    }
+
+    setLogin(true);
+    console.log('Logged in session');
+  }
+
+  async function checkAdmin() {
+    const bool = await isAdmin();
+
+    if (!login) {
+      setAdmnin(false);
+      return;
+    }
+
+    if (!bool) {
+      setAdmnin(false);
+      return;
+    }
+
+    setAdmnin(true);
+    console.log('This is admin operating!!');
+  }
+
+  useEffect(() => {
+    checkLogin();
+    checkAdmin();
+  }, []);
+
   return (
     <CartItemsProvider>
       <WishItemsProvider>

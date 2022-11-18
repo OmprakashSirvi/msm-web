@@ -83,7 +83,6 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
   // Get the token and check if it exists..
   if (req.cookies.jwt) {
-    if (!token) return next();
     // Verification of the token
     const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
     // console.log(decoded);
@@ -104,6 +103,16 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
   }
   next();
 });
+
+exports.checkUser = (req, res, next) => {
+  if (!res.user) return next(new AppError('User not logged in!!', 405));
+
+  res.status(200).json({
+    status: 'success',
+    message: 'user logged in!',
+    data: req.user,
+  });
+};
 
 /**
  * logout
@@ -172,7 +181,13 @@ exports.restrictTo =
  */
 
 exports.getMe = catchAsync(async (req, res, next) => {
-  const userDetails = { name: req.user.name, email: req.user.email };
+  const userDetails = { name: req.user.name, email: req.user.email, role: req.user.role };
+
+  if (req.user.role === 'admin') {
+    return res
+      .status(201)
+      .json({ status: 'success', message: 'Got your details', data: userDetails });
+  }
 
   res.status(200).json({
     status: 'success',
