@@ -3,7 +3,9 @@
 const express = require('express');
 
 // Custom routes
+const userController = require('../controllers/userController');
 const itemController = require('../controllers/itemsController');
+const orderController = require('../controllers/orderController');
 const adminController = require('../controllers/adminController');
 const authenticationController = require('../controllers/authenticationController');
 
@@ -22,7 +24,7 @@ router.get('/', authenticationController.getMe);
 router
   .route('/item')
   .get(itemController.getItems)
-  .post(uploadPhoto.array('images'), itemController.addItem);
+  .post(uploadPhoto.fields([{ name: 'images' }]), itemController.addItem);
 
 router
   .route('/item/:id')
@@ -32,8 +34,7 @@ router
 
 router.get('/user', adminController.getAllUsers);
 
-// TODO get information about particular user
-router.route('/user/:id').get();
+router.route('/user/:id').get(userController.getUserInfo);
 
 // TODO get orders of the current user
 router.get('/user/:id/order');
@@ -57,8 +58,7 @@ router.get('/payement');
 // get all payements
 router.get('/payement/all');
 
-// TODO edit role of the user
-router.patch('/users/:id/editRoles');
+router.patch('/users/:id/editRoles', userController.changeUserRole);
 
 // TODO get order summary and information
 router.get('/orderInsights');

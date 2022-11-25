@@ -2,12 +2,12 @@ import './RelatedCard.css';
 import { Link } from 'react-router-dom';
 
 const RelatedCard = (props) => {
+  const URL = process.env.REACT_APP_API_URL;
   return (
     <div className="related__product__card__container">
       <div className="related__product__card__inner">
         <div className="related__product__image">
-          {/* // TODO add image url here */}
-          <img src={''} alt="item" className="product__img" />
+          <img src={`${URL}/images/${props.item.images[0].filename}`} alt="item" className="product__img" />
         </div>
         <div className="related__product__card__detail">
           <div className="related__product__name">

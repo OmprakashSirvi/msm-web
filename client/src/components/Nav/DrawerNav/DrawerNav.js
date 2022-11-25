@@ -15,78 +15,68 @@ import Form from '../Search-Bar/Form';
 import { Link } from 'react-router-dom';
 
 const DrawerNav = () => {
-   const [state, setState] = useState({
-      left: false,
-   });
+  const [state, setState] = useState({
+    left: false,
+  });
 
-   const toggleDrawer = (anchor, open) => (event) => {
-      if (
-         event.type === 'keydown' &&
-         (event.key === 'Tab' || event.key === 'Shift')
-      ) {
-         return;
-      }
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
 
-      setState({ ...state, [anchor]: open });
-   };
+    setState({ ...state, [anchor]: open });
+  };
 
-   const list = (anchor) => (
-      <Box
-         sx={{ width: 250 }}
-         role="presentation"
-         onClick={toggleDrawer(anchor, false)}
-         onKeyDown={toggleDrawer(anchor, false)}
-      >
-         <List>
-            {['Home', 'Shop', 'Saree', 'Lenga', 'Kurti'].map((text) => (
-               <ListItem key={text} disablePadding>
-                  <ListItemButton>
-                     <ListItemText>
-                        <Link to="/category/men">{text}</Link>
-                     </ListItemText>
-                  </ListItemButton>
-               </ListItem>
-            ))}
-         </List>
-         <List>
-            <ListItem disablePadding>
-               <Control />
-            </ListItem>
-         </List>
-         <List>
-            <ListItem>
-               <div className="search__drawer">
-                  <Form />
-               </div>
-            </ListItem>
-         </List>
-         <Divider />
-      </Box>
-   );
+  const list = (anchor) => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {['saree', 'lenga', 'kurti'].map((text) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemText>
+                <Link to={`/category/${text}`}>{text}</Link>
+              </ListItemText>
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <List>
+        <ListItem disablePadding>
+          <Control />
+        </ListItem>
+      </List>
+      <List>
+        <ListItem>
+          <div className="search__drawer">
+            <Form />
+          </div>
+        </ListItem>
+      </List>
+      <Divider />
+    </Box>
+  );
 
-   return (
-      <Fragment>
-         {['left'].map((anchor) => (
-            <Fragment>
-               {state.left ? (
-                  <MenuOpenIcon fontSize="large" />
-               ) : (
-                  <MenuIcon
-                     fontSize="large"
-                     onClick={toggleDrawer(anchor, true)}
-                  />
-               )}
-               <Drawer
-                  anchor={anchor}
-                  open={state[anchor]}
-                  onClose={toggleDrawer(anchor, false)}
-               >
-                  {list(anchor)}
-               </Drawer>
-            </Fragment>
-         ))}
-      </Fragment>
-   );
+  return (
+    <Fragment>
+      {['left'].map((anchor) => (
+        <Fragment>
+          {state.left ? (
+            <MenuOpenIcon fontSize="large" />
+          ) : (
+            <MenuIcon fontSize="large" onClick={toggleDrawer(anchor, true)} />
+          )}
+          <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+            {list(anchor)}
+          </Drawer>
+        </Fragment>
+      ))}
+    </Fragment>
+  );
 };
 
 export default DrawerNav;

@@ -1,5 +1,6 @@
 /** @format */
 
+const path = require('path');
 const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
@@ -8,7 +9,6 @@ const cookieParser = require('cookie-parser');
 const itemRoutes = require('./routes/itemRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const cartRoutes = require('./routes/cartRoutes');
 const payementRoutes = require('./routes/paymentRoutes');
 
 const AppError = require('./utils/AppError');
@@ -20,6 +20,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.urlencoded({ extended: false }));
 

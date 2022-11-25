@@ -17,7 +17,6 @@ const ManageAccount = () => {
       });
 
       const resData = await res.json();
-      console.log(resData);
 
       if (resData.error && resData.error.statusCode === 401) {
         navigate('/account/login');
@@ -25,8 +24,6 @@ const ManageAccount = () => {
       }
 
       setUser(resData.data);
-
-      console.log(user);
     } catch (err) {
       console.log(err);
     }

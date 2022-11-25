@@ -1,8 +1,6 @@
 import './Account.css';
 
 const Account = (props) => {
-  console.log('Account props');
-  console.log(props);
   return (
     <div className="user__account__container">
       <div className="account__container">

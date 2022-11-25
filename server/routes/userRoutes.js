@@ -4,7 +4,10 @@ const cors = require('cors');
 const express = require('express');
 
 const cartRoutes = require('./cartRoutes');
+const orderRoutes = require('./orderRoutes');
 // const adminController = require('../controllers/adminController');
+
+const cartController = require('../controllers/cartController');
 const authenticationController = require('../controllers/authenticationController');
 
 const router = express.Router();
@@ -26,16 +29,8 @@ router.get('/', authenticationController.getMe);
 router.patch('/deactivateAccount');
 router.get('/logout', authenticationController.logout);
 
-// Might add this to cart route
-router.route('/cart', cartRoutes);
+router.use('/cart', cartRoutes);
 
-// get current user orders(active)
-router.get('/order');
-
-// get current user orders(all)
-router.get('/order/all');
-
-// delete pending order
-router.delete('/order/:id');
+router.use('/order', orderRoutes);
 
 module.exports = router;

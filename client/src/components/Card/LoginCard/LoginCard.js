@@ -31,6 +31,7 @@ const LoginCard = () => {
       if (res.status === 200) {
         console.log('Login successful');
         navigate('/');
+        window.location.reload();
       }
     } catch (err) {
       console.log(err);

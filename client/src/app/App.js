@@ -1,8 +1,7 @@
 /** @format */
 
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, Outlet } from 'react-router-dom';
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,6 +26,7 @@ import Login from '../components/Authentication/Login/Login';
 import Register from '../components/Authentication/Register/Register';
 
 import { isLoggedIn, isAdmin } from '../utils/auth';
+import Cart from '../components/Card/Cart/Cart';
 
 // import DrawerNav from '../components/Nav/DrawerNav/DrawerNav';
 // import Checkout from '../components/Checkout/Checkout';
@@ -44,7 +44,6 @@ function App() {
     }
 
     setLogin(true);
-    console.log('Logged in session');
   }
 
   async function checkAdmin() {
@@ -61,13 +60,31 @@ function App() {
     }
 
     setAdmnin(true);
-    console.log('This is admin operating!!');
   }
 
   useEffect(() => {
     checkLogin();
     checkAdmin();
-  }, []);
+  });
+
+  const AdminProtectedComponent = (Component) =>
+    login && admin ? (
+      <Component />
+    ) : (
+      <Navigate
+        to={{
+          pathname: '/admin',
+        }}
+      />
+    );
+
+  const ProtectedComponent = ({ children }) => {
+    return login ? children : <Navigate to="/account/login" replace />;
+  };
+
+  const LoginProtect = ({ children }) => {
+    return login ? <Navigate to="/account/me" replace /> : children;
+  };
 
   return (
     <CartItemsProvider>
@@ -78,10 +95,34 @@ function App() {
             <Routes>
               {/* <Route exact path="/" element={<Home />} /> */}
               <Route index element={<Home />} />
+
               <Route path="/account">
-                <Route path="me" element={<MyAccount />} />
-                <Route path="manage" element={<ManageAccount />} />
-                <Route path="login" element={<Login />} />
+                {/* <Route path="me" element={<MyAccount />} /> */}
+                <Route
+                  path="manage"
+                  element={
+                    <ProtectedComponent>
+                      <ManageAccount />
+                    </ProtectedComponent>
+                  }
+                />
+                <Route
+                  path="me"
+                  element={
+                    <ProtectedComponent>
+                      <MyAccount />
+                    </ProtectedComponent>
+                  }
+                />
+                <Route
+                  path="login"
+                  element={
+                    <LoginProtect>
+                      <Login />
+                    </LoginProtect>
+                  }
+                />
+                {/* TODO can add cart route here   */}
                 <Route path="register" element={<Register />} />
                 <Route path="*" element={<Login />} />
               </Route>
@@ -103,13 +144,20 @@ function App() {
                   <Route path=":id" element={<ItemView />} />
                 </Route>
               </Route>
-              <Route path="/wishlist" element={<Wishlist />} />
+
+              <Route
+                path="/wishlist"
+                element={
+                  <ProtectedComponent>
+                    <Wishlist />
+                  </ProtectedComponent>
+                }
+              />
+
               <Route path="/search/*" element={<SearchView />} />
             </Routes>
             <Footer />
-            <Routes>
-              <Route path="/admin" element={<Wishlist />} />
-            </Routes>
+            <Routes></Routes>
           </Router>
         </SearchProvider>
       </WishItemsProvider>

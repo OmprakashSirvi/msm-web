@@ -7,8 +7,6 @@ import ShopCategory from './Container/ShopCategory';
 import './Shop.css';
 import ReactLoading from 'react-loading';
 
-const fetchURL = `${process.env.REACT_APP_API_URL}/api/v1/items`;
-
 const Shop = () => {
   TabTitle('Shop - msm-web');
 
@@ -19,7 +17,7 @@ const Shop = () => {
 
   useEffect(() => {
     axios
-      .get(fetchURL)
+      .get('/api/v1/items')
       .then((res) => {
         setSareeItems(res.data.data.filter((item) => item.category === 'saree'));
         setLehngaItems(res.data.data.filter((item) => item.category === 'lehnga'));

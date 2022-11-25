@@ -1,5 +1,5 @@
 /** @format */
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import Account from '../Account';
 import './MyAccount.css';
@@ -20,16 +20,14 @@ const MyAccount = () => {
       });
 
       const resData = await res.json();
-      console.log(resData);
 
       if (resData.error && resData.error.statusCode === 401) {
         navigate('/account/login');
         window.alert(resData.message);
+        navigate('/');
       }
 
       setUser(resData.data);
-
-      console.log(user);
     } catch (err) {
       console.log(err);
     }
@@ -39,40 +37,53 @@ const MyAccount = () => {
     userInfo();
   }, []);
 
-  function handleLogout(e) {
+  async function handleLogout(e) {
     e.preventDefault();
-    console.log('Logout button clicked');
+    try {
+      await fetch('/api/v1/user/logout', {
+        method: 'GET',
+        headers: { accept: 'application/jsson', 'content-type': 'application/json' },
+        credentials: 'include',
+      });
+
+      navigate('/');
+      window.location.reload();
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   return (
-    <Account>
-      <div className="order__history__container">
-        <div className="order__history">
-          <div className="order__history__header">Order History</div>
-          <div className="order__history__detail">You have not place any orders yet</div>
-        </div>
-      </div>
-      <div className="account__details__container">
-        <div className="account__details__header">
-          <div className="details__header">Account Details</div>
-          <div className="logout__action">
-            <button onClick={handleLogout}>Logout</button>
+    <Fragment>
+      <Account>
+        <div className="order__history__container">
+          <div className="order__history">
+            <div className="order__history__header">Order History</div>
+            <div className="order__history__detail">You have not place any orders yet</div>
           </div>
         </div>
-        <br />
-        <div className="account__details">
-          <div className="account__holder__name">Account holder name</div>
-          <p>{user.name}</p>
-          <div className="account__holder__email">Account holder email</div>
-          <p>{user.email}</p>
-          <div className="manage__account__action">
-            <button>
-              <Link to="/account/manage">Manage account</Link>
-            </button>
+        <div className="account__details__container">
+          <div className="account__details__header">
+            <div className="details__header">Account Details</div>
+            <div className="logout__action">
+              <button onClick={handleLogout}>Logout</button>
+            </div>
+          </div>
+          <br />
+          <div className="account__details">
+            <div className="account__holder__name">Account holder name</div>
+            <p>{user.name}</p>
+            <div className="account__holder__email">Account holder email</div>
+            <p>{user.email}</p>
+            <div className="manage__account__action">
+              <button>
+                <Link to="/account/manage">Manage account</Link>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </Account>
+      </Account>
+    </Fragment>
   );
 };
 
